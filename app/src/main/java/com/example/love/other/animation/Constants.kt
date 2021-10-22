@@ -12,4 +12,6 @@ object Constants {
     const val THEME_ALARM_ID = "5"
     const val TIME_TO_REPEAT_ALARM = 180000
     const val PENDING_INTENT_SP = "3"
+    const val OBJ = "2"
+    const val APP_INSTANCE = "282"
 }

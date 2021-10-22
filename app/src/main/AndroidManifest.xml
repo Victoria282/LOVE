@@ -24,6 +24,7 @@
             android:enabled="true"
             android:exported="true"/>
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:enabled="true"
             android:exported="true"
@@ -34,6 +35,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".TaskActivity"
             android:enabled="true"
             android:exported="true">

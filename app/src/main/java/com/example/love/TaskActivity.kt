@@ -18,12 +18,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.love.Service.AlarmService
 import com.example.love.databinding.ActivityTaskBinding
 import com.example.love.model.TaskDB
-import com.example.love.other.animation.Constants.TIME_TO_REPEAT_ALARM
 import com.example.love.view_model.MainViewModel
 import ru.unit6.course.android.retrofit.utils.Status
 import android.view.Gravity
+import com.example.love.SharedPreferences.SharedPreferences.app
+import com.example.love.other.animation.Constants
 import com.example.love.other.animation.ObjectPending
-
+import com.example.love.other.animation.PrefConfig
+import com.google.gson.annotations.JsonAdapter
 
 class TaskActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTaskBinding
@@ -38,7 +40,6 @@ class TaskActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityTaskBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         setContentView(binding.root)
@@ -48,7 +49,6 @@ class TaskActivity : AppCompatActivity() {
         setupObservers()
 
         binding.buttonOffAlarm.setOnClickListener {
-            countOfAnswer--
             userAnswer = binding.editTextTextPersonName.text.toString().trim()
             when (userAnswer) {
                 rightAnswer -> {
@@ -60,6 +60,7 @@ class TaskActivity : AppCompatActivity() {
                 }
                 else -> {
                     if(countOfAnswer != 0) {
+                        countOfAnswer--
                         showMessage("Не верно, попробуйте ещё..")
                     }
                     else {

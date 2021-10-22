@@ -3,10 +3,12 @@ package com.example.love.ui.home
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.love.other.animation.Constants.DATE_ALARM_ID
 import com.example.love.other.animation.Constants.SWITCH_ALARM_ID
@@ -25,6 +27,11 @@ import com.example.love.databinding.FragmentHomeBinding
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -57,6 +64,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onStart() {
         super.onStart()
         with(binding) {
@@ -99,6 +107,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     // установка даты будильника
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setAlarmDate() {
         var year = calendar.get(Calendar.YEAR)
         var month = calendar.get(Calendar.MONTH)
@@ -115,15 +124,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 // Вызов часов
         }, year, month, dayOfMonth)
         }?.show()
+        //
     }
 
+
     // установка времени будильника
-    @SuppressLint("SimpleDateFormat")
+    @SuppressLint("SimpleDateFormat", "Range")
     private fun  setAlarmTime(year: Int, month: Int, dayOfMonth: Int) {
         val picker = MaterialTimePicker
             .Builder()
             .setTimeFormat(TimeFormat.CLOCK_24H)
-            .setHour(12)
+            .setHour(24)
             .setMinute(0)
             .setTitleText("Выберите время для будильника")
             .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
@@ -163,6 +174,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val savedStatusSwitch = prefs.getBoolean(SWITCH_ALARM_ID, false)
         val savedVisibility = prefs.getInt(VISIBILITY_ALARM_ID, -1)
         restoreData(savedTime, savedDate, savedVisibility, savedStatusSwitch)
+
     }
 
     // запомнить данные об установленном будильнике
@@ -197,7 +209,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 setBackgroundResource(R.drawable.dark)
         }
     }
+    fun getDateDifferenceInDays(date1: Date?, date2: Date) : Long {
+        // Get the date in milliseconds
+        val millis1: Long? = date1?.time
+        val millis2: Long = date2.time
 
+        // Calculate difference in milliseconds
+        val diff = millis2 - millis1!!
+        return diff
+    }
     override fun onDestroyView() {
         super.onDestroyView()
     }
