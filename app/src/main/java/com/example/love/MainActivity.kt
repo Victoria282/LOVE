@@ -1,12 +1,7 @@
 package com.example.love
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
-import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -19,7 +14,6 @@ import com.example.love.Service.AlarmService
 import com.example.love.database.AppDatabase
 import com.example.love.databinding.ActivityMainBinding
 import com.example.love.model.TaskDB
-import com.example.love.other.animation.ObjectPending
 import com.example.love.view_model.MainViewModel
 import ru.unit6.course.android.retrofit.utils.Status
 

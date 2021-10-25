@@ -1,9 +1,7 @@
 package com.example.love
 
 import android.app.ActivityManager
-import android.app.AlarmManager
 import android.app.KeyguardManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
@@ -17,12 +15,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.love.Service.AlarmService
 import com.example.love.databinding.ActivityTaskBinding
-import com.example.love.model.TaskDB
-import com.example.love.view_model.MainViewModel
-import ru.unit6.course.android.retrofit.utils.Status
 import android.view.Gravity
 import com.example.love.BroadcastReceiver.BroadcastReceiver
-import com.example.love.other.animation.ObjectPending
 import com.example.love.view_model.DatabaseViewModel
 
 class TaskActivity : AppCompatActivity() {
