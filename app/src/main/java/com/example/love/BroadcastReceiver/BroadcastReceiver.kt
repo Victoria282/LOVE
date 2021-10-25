@@ -42,29 +42,19 @@ class BroadcastReceiver(): BroadcastReceiver() {
     }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setAlarm(alarmTime:Long, context: Context) {
-        try {
-            val prefs = com.example.love.SharedPreferences.SharedPreferences.customPreference(
-                context, "SharedPreferences")
-            val savedTime = prefs.getLong(Constants.ALARM_TIME, 0L)
-            val intent = Intent(context, AlarmService::class.java)
-            val pendingIntentTest = PendingIntent.getForegroundService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-            alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(savedTime, pendingIntentTest), pendingIntentTest)
-        }
-        catch (e:Exception) {
-            System.out.println("VIKA MISTAKE BR")
-        }
+        val prefs = com.example.love.SharedPreferences.SharedPreferences.customPreference(
+            context, "SharedPreferences")
+        val savedTime = prefs.getLong(Constants.ALARM_TIME, 0L)
+        val intent = Intent(context, AlarmService::class.java)
+        val pendingIntentTest = PendingIntent.getForegroundService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(savedTime, pendingIntentTest), pendingIntentTest)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun cancelAlarm(context: Context) {
-        try {
-            val intent = Intent(context, AlarmService::class.java)
-            val pendingIntent = PendingIntent.getForegroundService(context, 0, intent, PendingIntent.FLAG_NO_CREATE)
-            //alarmManager.cancel(pendingIntent)
-            pendingIntent?.cancel()
-        }
-        catch (e:Exception) {
-            System.out.println("VIKA MISTAKE HERE")
-        }
+        val intent = Intent(context, AlarmService::class.java)
+        val pendingIntent = PendingIntent.getForegroundService(context, 0, intent, PendingIntent.FLAG_NO_CREATE)
+        //alarmManager.cancel(pendingIntent)
+        pendingIntent?.cancel()
     }
 }
