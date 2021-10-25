@@ -1,26 +1,19 @@
 package com.example.love.SharedPreferences
 
-import android.app.PendingIntent
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.core.content.edit
+import com.example.love.other.animation.Constants.ALARM_DATE
+import com.example.love.other.animation.Constants.ALARM_TIME
 import com.example.love.other.animation.Constants.APP_INSTANCE
 import com.example.love.other.animation.Constants.DATE_ALARM_ID
-import com.example.love.other.animation.Constants.OBJ
 import com.example.love.other.animation.Constants.SWITCH_ALARM_ID
 import com.example.love.other.animation.Constants.THEME_ALARM_ID
 import com.example.love.other.animation.Constants.TIME_ALARM_ID
 import com.example.love.other.animation.Constants.VISIBILITY_ALARM_ID
-import com.example.love.other.animation.ObjectPending
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import okhttp3.internal.cache2.Relay.Companion.edit
-import okhttp3.internal.concurrent.Task
-import java.io.IOException
 
 object SharedPreferences {
-    fun customPreference(context: Context, name: String): SharedPreferences = context.
-    getSharedPreferences(name, Context.MODE_PRIVATE)
+    fun customPreference(context: Context, name: String): SharedPreferences =
+        context.getSharedPreferences(name, Context.MODE_PRIVATE)
 
     private inline fun SharedPreferences.editMe(operation: (SharedPreferences.Editor) -> Unit) {
         val editMe = edit()
@@ -28,7 +21,6 @@ object SharedPreferences {
         editMe.apply()
     }
 
-    // установка темы приложения (светлая / темная)
     var SharedPreferences.theme
         get() = getBoolean(THEME_ALARM_ID, false)
         set(value) {
@@ -77,11 +69,19 @@ object SharedPreferences {
             }
         }
 
-    var SharedPreferences.arr
-        get() = getString("ARR", "")
+    var SharedPreferences.alarmTime
+        get() = getLong(ALARM_TIME, 0L)
         set(value) {
             editMe {
-                it.putString("task", value)
+                it.putLong(ALARM_TIME, value)
             }
         }
-    }
+
+    var SharedPreferences.alarmAction
+        get() = getString(ALARM_DATE, "")
+        set(value) {
+            editMe {
+                it.putString(ALARM_DATE, value)
+            }
+        }
+}

@@ -21,38 +21,36 @@ import com.example.love.model.TaskDB
 import com.example.love.view_model.MainViewModel
 import ru.unit6.course.android.retrofit.utils.Status
 import android.view.Gravity
-import com.example.love.SharedPreferences.SharedPreferences.app
-import com.example.love.other.animation.Constants
+import com.example.love.BroadcastReceiver.BroadcastReceiver
 import com.example.love.other.animation.ObjectPending
-import com.example.love.other.animation.PrefConfig
-import com.google.gson.annotations.JsonAdapter
+import com.example.love.view_model.DatabaseViewModel
 
 class TaskActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTaskBinding
-    private lateinit var viewModel: MainViewModel
+    private lateinit var DBviewModel: DatabaseViewModel
 
-    private val randIndexTask = (1..4).random() - 1
+    private val randIndexTask = (1..6).random() - 1
 
     private var rightAnswer: String = ""
     private var userAnswer: String = ""
 
-    private var countOfAnswer: Int = 2
+    private var countOfAnswer: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTaskBinding.inflate(layoutInflater)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        DBviewModel = ViewModelProvider(this).get(DatabaseViewModel::class.java)
+
         setContentView(binding.root)
 
         wakeUpApp()
         startAlarmService()
-        setupObservers()
+        getTaskFromDB()
 
         binding.buttonOffAlarm.setOnClickListener {
             userAnswer = binding.editTextTextPersonName.text.toString().trim()
             when (userAnswer) {
                 rightAnswer -> {
-                    ObjectPending.globalList.clear()
                     finishTaskActivity("true")
                 }
                 "" -> {
@@ -64,14 +62,11 @@ class TaskActivity : AppCompatActivity() {
                         showMessage("Не верно, попробуйте ещё..")
                     }
                     else {
-                        countOfAnswer = 2
-                        val alarmManager = this.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                        val intent = Intent(this, com.example.love.BroadcastReceiver.BroadcastReceiver::class.java)
-                        intent.action = "set"
-                        intent.putExtra("alarmInfo", System.currentTimeMillis())
-                        val pi = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-                        ObjectPending.globalList.add(pi)
-                        alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(System.currentTimeMillis() + 1000 * 60 * 3, pi), pi)
+                        countOfAnswer = 1
+                        val testIntent = Intent(this, BroadcastReceiver::class.java)
+                        testIntent.putExtra("alarmInfo", System.currentTimeMillis() + 1000 * 3)
+                        testIntent.action = "set"
+                        sendBroadcast(testIntent)
                         finishTaskActivity("false")
                     }
                 }
@@ -79,6 +74,9 @@ class TaskActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+    }
     private fun showMessage(str: String) {
         val toast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
         toast.setText(str)
@@ -91,13 +89,12 @@ class TaskActivity : AppCompatActivity() {
         val nextActivityMain = Intent(this, MainActivity::class.java)
         nextActivityMain.putExtra("result", msg)
         if(msg == "false") {
-            countOfAnswer = 2
+            countOfAnswer = 1
         }
         startActivity(nextActivityMain)
     }
 
     private fun wakeUpApp() {
-        // ПРОБУЖДЕНИЕ ЭКРАНА
         @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true)
@@ -140,37 +137,8 @@ class TaskActivity : AppCompatActivity() {
         return false
     }
 
-    private fun setupObservers() {
-        viewModel.getAllTasks().observe(this) { resource ->
-            when (resource.status) {
-                Status.SUCCESS -> {
-                    binding.progressBar.visibility = View.GONE
-                    resource.data?.let { task ->
-                        viewModel.setAllTasksToDatabase(
-                            tasks = task.map { task ->
-                                TaskDB(
-                                    id = task.id,
-                                    task = task.task,
-                                    answer = task.answer
-                                )
-                            }
-                        )
-                    }
-                }
-                Status.LOADING -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-                Status.ERROR -> {
-                    binding.progressBar.visibility = View.GONE
-                    binding.textView.text = "Что-то пошло не так.."
-                }
-            }
-        }
-        getTaskFromDB()
-    }
-
     private fun getTaskFromDB() {
-        viewModel.localTasks.observe(this)  {
+        DBviewModel.readAllData.observe(this)  {
             binding.textView.text = it[randIndexTask].task
             rightAnswer = it[randIndexTask].answer
         }
@@ -180,5 +148,4 @@ class TaskActivity : AppCompatActivity() {
         super.onDestroy()
         stopService(Intent(this, AlarmService::class.java))
     }
-
 }

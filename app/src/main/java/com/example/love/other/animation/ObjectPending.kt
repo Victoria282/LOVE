@@ -8,5 +8,5 @@ import com.example.love.SharedPreferences.SharedPreferences
 import com.google.gson.Gson
 
 object ObjectPending {
-    var globalList = ArrayList<PendingIntent>()
+    //var globalList = ArrayList<PendingIntent>()
 }

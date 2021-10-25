@@ -27,11 +27,6 @@ import com.example.love.databinding.FragmentHomeBinding
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 import java.util.*
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -57,7 +52,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         loadAlarm()
     }
 
-    // Статус будильника (включен / выключен)
     private fun getInfoStatusAlarm(myDataFromActivity: String?) {
         if(myDataFromActivity != null && myDataFromActivity == "true") {
             deleteCardViewAlarm()
@@ -88,8 +82,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             setIcon(R.drawable.ic_nights_stay_dark)
             setMessage("Вы уверены?")
             setPositiveButton("Да"){ _, _ ->
-                val activity: MainActivity? = activity as MainActivity?
-                val test = activity?.sendActionToBroadcast(System.currentTimeMillis(), "cancel")
+                sendDataBroadcast("cancel", System.currentTimeMillis())
                 deleteCardViewAlarm()
             }
             setNegativeButton("Отмена"){ _, _ ->
@@ -98,6 +91,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         val dialog: AlertDialog = builder.create()
         dialog.show()
+    }
+    private fun sendDataBroadcast(action: String, timeInMillis: Long) {
+        val activity: MainActivity? = activity as MainActivity?
+        val test = activity?.sendActionToBroadcast(timeInMillis, action)
     }
 
     // Удаление card View с будильником
@@ -118,15 +115,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 year = y
                 month = m + 1
                 dayOfMonth = dM
-                // Результирующая дата
                 dateAlarm = "$dayOfMonth.$month.$year"
                 setAlarmTime(year, month, dayOfMonth)
-                // Вызов часов
         }, year, month, dayOfMonth)
         }?.show()
-        //
     }
-
 
     // установка времени будильника
     @SuppressLint("SimpleDateFormat", "Range")
@@ -147,8 +140,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 set(Calendar.MINUTE, picker.minute)
                 set(Calendar.HOUR_OF_DAY, picker.hour)
                 resultTime = SimpleDateFormat("HH:mm").format(time).toString()
-                val activity: MainActivity? = activity as MainActivity?
-                val test = activity?.sendActionToBroadcast(timeInMillis, "set")
+                sendDataBroadcast("set", timeInMillis)
             }
             setAlarmCard(dateAlarm, resultTime)
         }
@@ -209,15 +201,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 setBackgroundResource(R.drawable.dark)
         }
     }
-    fun getDateDifferenceInDays(date1: Date?, date2: Date) : Long {
-        // Get the date in milliseconds
-        val millis1: Long? = date1?.time
-        val millis2: Long = date2.time
 
-        // Calculate difference in milliseconds
-        val diff = millis2 - millis1!!
-        return diff
-    }
     override fun onDestroyView() {
         super.onDestroyView()
     }

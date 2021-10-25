@@ -16,7 +16,7 @@ import com.example.love.TaskActivity
 class AlarmService: Service() {
     private var mediaPlayer: MediaPlayer? = null
     private var vibrator: Vibrator? = null
-    private val pattern = longArrayOf(0, 500, 1000)
+    private val pattern: LongArray = longArrayOf(0, 500, 1000)
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -60,7 +60,6 @@ class AlarmService: Service() {
             .setSmallIcon(R.drawable.ic_nights_stay)
             .setContentIntent(pendingIntent)
             .setChannelId(CHANNEL_ID)
-            .setVibrate(pattern)
             .build()
         startForeground(FOREGROUND_ID, notification)
     }

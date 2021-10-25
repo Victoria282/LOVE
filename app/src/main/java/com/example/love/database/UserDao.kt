@@ -1,5 +1,6 @@
 package com.example.love.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.love.model.TaskDB
 
@@ -9,5 +10,5 @@ interface UserDao {
     suspend fun insertAllTasks(tasks: List<TaskDB>)
 
     @Query("Select * From tasks")
-    suspend fun getAllTasks():List<TaskDB>
+    fun getAllTasks():LiveData<List<TaskDB>>
 }

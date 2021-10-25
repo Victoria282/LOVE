@@ -8,21 +8,20 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 object PrefConfig {
-    fun writeList(context: Context, list: ArrayList<PendingIntent>) {
+   /* fun writeList(context: Context, obj: ObjectPending) {
         val pref:SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         val prefEd: SharedPreferences.Editor = pref.edit()
         val gson: Gson = Gson()
-        val jsonString: String = gson.toJson(list)
-
+        val jsonString: String = gson.toJson(obj)
         prefEd.putString("test", jsonString)
         prefEd.apply()
     }
 
-    fun readListFromPref(context: Context): ArrayList<PendingIntent>? {
+    fun readListFromPref(context: Context): ObjectPending {
         val pref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         val jsonString = pref.getString("test", "")
         val gson: Gson = Gson()
-        val turnsType = object : TypeToken<List<PendingIntent>>() {}.type
+        val turnsType = object : TypeToken<ObjectPending>() {}.type
         return gson.fromJson(jsonString, turnsType)
-    }
+    }*/
 }

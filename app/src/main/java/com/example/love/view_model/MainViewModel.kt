@@ -13,14 +13,13 @@ import ru.unit6.course.android.retrofit.data.utils.Resource.Companion.error
 import ru.unit6.course.android.retrofit.data.utils.Resource.Companion.loading
 import ru.unit6.course.android.retrofit.data.utils.Resource.Companion.success
 
-
 class MainViewModel : ViewModel() {
     private val apiHelper = ApiHelper(RetrofitBuilder.apiService)
     private val mainRepository: MainRepository = MainRepository(apiHelper)
     private val _localTasks = MutableLiveData<List<TaskDB>>()
     private val appDatabase = AppDatabase.getDatabase()
 
-    val localTasks : LiveData<List<TaskDB>>
+ /*   val localTasks : LiveData<List<TaskDB>>
         get() = _localTasks
 
     private fun getTasksFromDatabase() = viewModelScope.launch {
@@ -30,12 +29,12 @@ class MainViewModel : ViewModel() {
         catch (exception: Exception) {
             throw exception
         }
-    }
+    }*/
 
     fun setAllTasksToDatabase(tasks: List<TaskDB>) = viewModelScope.launch {
         withContext(Dispatchers.IO) {
             appDatabase.userDao().insertAllTasks(tasks)
-            getTasksFromDatabase()
+            //getTasksFromDatabase()
         }
     }
 
