@@ -26,11 +26,6 @@ class BroadcastReceiver(): BroadcastReceiver() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onReceive(context: Context, intent: Intent) {
-        val prefs = com.example.love.SharedPreferences.SharedPreferences.customPreference(
-            context, "SharedPreferences")
-
-        prefs.alarmTime = intent.getLongExtra("alarmInfo", 0L)
-        prefs.alarmAction = intent.action
 
         alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val alarmTime = intent.getLongExtra("alarmInfo", 0L)
@@ -42,12 +37,9 @@ class BroadcastReceiver(): BroadcastReceiver() {
     }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setAlarm(alarmTime:Long, context: Context) {
-        val prefs = com.example.love.SharedPreferences.SharedPreferences.customPreference(
-            context, "SharedPreferences")
-        val savedTime = prefs.getLong(Constants.ALARM_TIME, 0L)
         val intent = Intent(context, AlarmService::class.java)
-        val pendingIntentTest = PendingIntent.getForegroundService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(savedTime, pendingIntentTest), pendingIntentTest)
+        val pendingIntentTest = PendingIntent.getForegroundService(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        alarmManager.setAlarmClock(AlarmManager.AlarmClockInfo(alarmTime, pendingIntentTest), pendingIntentTest)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
