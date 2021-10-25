@@ -17,6 +17,7 @@ import com.example.love.Service.AlarmService
 import com.example.love.databinding.ActivityTaskBinding
 import android.view.Gravity
 import com.example.love.BroadcastReceiver.BroadcastReceiver
+import com.example.love.other.animation.Constants.TIME_TO_REPEAT_ALARM
 import com.example.love.view_model.DatabaseViewModel
 
 class TaskActivity : AppCompatActivity() {
@@ -58,7 +59,7 @@ class TaskActivity : AppCompatActivity() {
                     else {
                         countOfAnswer = 1
                         val testIntent = Intent(this, BroadcastReceiver::class.java)
-                        testIntent.putExtra("alarmInfo", System.currentTimeMillis() + 1000 * 3)
+                        testIntent.putExtra("alarmInfo", TIME_TO_REPEAT_ALARM)
                         testIntent.action = "set"
                         sendBroadcast(testIntent)
                         finishTaskActivity("false")
@@ -68,9 +69,7 @@ class TaskActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
+
     private fun showMessage(str: String) {
         val toast = Toast.makeText(this, "", Toast.LENGTH_SHORT)
         toast.setText(str)

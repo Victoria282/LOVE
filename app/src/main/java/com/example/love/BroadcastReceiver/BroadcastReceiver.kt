@@ -46,7 +46,6 @@ class BroadcastReceiver(): BroadcastReceiver() {
     private fun cancelAlarm(context: Context) {
         val intent = Intent(context, AlarmService::class.java)
         val pendingIntent = PendingIntent.getForegroundService(context, 0, intent, PendingIntent.FLAG_NO_CREATE)
-        //alarmManager.cancel(pendingIntent)
         pendingIntent?.cancel()
     }
 }
